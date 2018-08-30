@@ -19,9 +19,13 @@ from django.urls import path, include
 from SuperMarket.settings import MEDIA_ROOT, MEDIA_URL
 from django.conf.urls.static import static
 
+from goods.views_base import GoodsListView
+
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
     path('ueditor/', include('DjangoUeditor.urls')),
+
+    path('goods/', GoodsListView.as_view(), name='goods-list')
 ]
 # 配置上传文件的访问显示
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
