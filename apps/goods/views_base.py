@@ -8,6 +8,9 @@ from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 
 from goods.models import Goods
+from django.http import HttpResponse
+
+from .models import Goods
 
 
 class GoodsListView(View):
@@ -34,3 +37,12 @@ class GoodsListView(View):
 
         # return HttpResponse(json_data, content_type="application/json")
         return JsonResponse(json_data, safe=False)
+        for good in goods:
+            json_dict = {}
+            json_dict['name'] = good.name
+            json_dict['category'] = good.category.name
+            json_dict['market_price'] = good.market_price
+            json_list.append(json_dict)
+
+        return HttpResponse(json.dumps(json_list), content_type="application/json")
+
