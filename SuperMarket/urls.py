@@ -16,8 +16,12 @@ Including another URLconf
 from django.contrib import admin
 import xadmin
 from django.urls import path, include
+from SuperMarket.settings import MEDIA_ROOT, MEDIA_URL
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
     path('ueditor/', include('DjangoUeditor.urls')),
 ]
+# 配置上传文件的访问显示
+urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
