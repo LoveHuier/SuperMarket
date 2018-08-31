@@ -18,14 +18,20 @@ import xadmin
 from django.urls import path, include
 from SuperMarket.settings import MEDIA_ROOT, MEDIA_URL
 from django.conf.urls.static import static
+from rest_framework.documentation import include_docs_urls
 
-from goods.views_base import GoodsListView
+from goods.views import GoodsListView
 
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
     path('ueditor/', include('DjangoUeditor.urls')),
+    # drf文档功能的配置
+    path('docs/', include_docs_urls(title='supermarket')),
 
-    path('goods/', GoodsListView.as_view(), name='goods-list')
+    path('goods/', GoodsListView.as_view(), name='goods-list'),
+
+    # drf登录的配置
+    path('api-auth/', include('rest_framework.urls')),
 ]
 # 配置上传文件的访问显示
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
