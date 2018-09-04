@@ -9,15 +9,15 @@ from .models import Goods
 
 # Create your views here.
 
-class GoodsListView(mixins.ListModelMixin, generics.GenericAPIView):
+class GoodsListView(generics.ListAPIView):
     """
     商品列表页
     """
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+    # def get(self, request, *args, **kwargs):
+    #     return self.list(request, *args, **kwargs)
 
         # def get(self, request, format=None):
         #     goods = Goods.objects.all()[:10]
