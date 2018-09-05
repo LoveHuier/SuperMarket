@@ -19,8 +19,18 @@ from django.urls import path, include
 from SuperMarket.settings import MEDIA_ROOT, MEDIA_URL
 from django.conf.urls.static import static
 from rest_framework.documentation import include_docs_urls
+from rest_framework.routers import DefaultRouter
 
-from goods.views import GoodsListView
+from goods.views import GoodsListView, GoodsListViewSet
+
+router = DefaultRouter()
+
+# 配置goods的url
+router.register(r'goods', GoodsListViewSet)
+
+# goods_list = GoodsListViewSet.as_view({
+#     'get': 'list',
+# })
 
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
@@ -28,7 +38,9 @@ urlpatterns = [
     # drf文档功能的配置
     path('docs/', include_docs_urls(title='supermarket')),
 
-    path('goods/', GoodsListView.as_view(), name='goods-list'),
+    # path('goods/', goods_list, name='goods-list'),
+
+    path('', include(router.urls)),
 
     # drf登录的配置
     path('api-auth/', include('rest_framework.urls')),
