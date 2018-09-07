@@ -27,14 +27,15 @@ class GoodsPagination(PageNumberPagination):
 
 class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
-    商品列表页
+    商品列表页，分页，搜索，过滤，排序
     """
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filterset_class = GoodsFilter
     search_fields = ('name', 'goods_brief', 'goods_desc')
+    ordering_fields = ('add_time', 'sold_num', 'fav_num')
 
 
 class GoodsListView(generics.ListAPIView):
