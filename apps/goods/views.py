@@ -16,7 +16,7 @@ from .filters import GoodsFilter
 
 class GoodsPagination(PageNumberPagination):
     # 每页显示多少个
-    page_size = 10
+    page_size = 12
     # 默认每页显示3个，可以通过传入pager1/?page=2&size=4,改变默认每页显示的个数
     page_size_query_param = "size"
     # 最大页数不超过10
@@ -35,7 +35,7 @@ class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filterset_class = GoodsFilter
     search_fields = ('name', 'goods_brief', 'goods_desc')
-    ordering_fields = ('add_time', 'sold_num', 'fav_num')
+    ordering_fields = ('shop_price', 'sold_num')
 
 
 class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
