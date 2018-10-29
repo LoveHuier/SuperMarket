@@ -20,6 +20,7 @@ from SuperMarket.settings import MEDIA_ROOT, MEDIA_URL
 from django.conf.urls.static import static
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views
 
 from goods.views import GoodsListView, GoodsListViewSet, CategoryViewSet
 
@@ -46,6 +47,8 @@ urlpatterns = [
 
     # drf登录的配置
     path('api-auth/', include('rest_framework.urls')),
+    # 配置获取token的url
+    path('api-token-auth/', views.obtain_auth_token),
 ]
 # 配置上传文件的访问显示
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
