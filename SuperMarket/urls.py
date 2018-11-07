@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
+from rest_framework_jwt.views import obtain_jwt_token
 
 from goods.views import GoodsListView, GoodsListViewSet, CategoryViewSet
 
@@ -47,8 +48,10 @@ urlpatterns = [
 
     # drf登录的配置
     path('api-auth/', include('rest_framework.urls')),
-    # 配置获取token的url
+    # 配置获取token的url,drf自带的token认证模式
     path('api-token-auth/', views.obtain_auth_token),
+    # jwt的认证接口
+    path('jwt-token-auth/', obtain_jwt_token),
 ]
 # 配置上传文件的访问显示
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
