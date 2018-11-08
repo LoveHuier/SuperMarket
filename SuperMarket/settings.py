@@ -33,6 +33,11 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'users.UserProfile'
 
+# 自定义验证类
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+)
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -149,4 +154,12 @@ REST_FRAMEWORK = {
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         # 'rest_framework.authentication.TokenAuthentication',
     )
+}
+
+# 设置token过期时间
+import datetime
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
