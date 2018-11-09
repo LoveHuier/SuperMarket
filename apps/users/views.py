@@ -84,3 +84,10 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
             return Response({
                 'mobile': mobile
             }, status=status.HTTP_201_CREATED)
+
+
+class UserViewset(CreateModelMixin, viewsets.GenericViewSet):
+    """
+    注册用户
+    """
+    serializer_class = ''

@@ -38,5 +38,34 @@ class SmsSerializer(serializers.Serializer):
         if VerifyCode.objects.filter(add_time__gt=one_minutes_ago, mobile=mobile):
             raise ValueError("距离上次发送不到１分钟")
 
-        # 如果所有验证通过一定要把data，即moblie return回去
+        # 如果所有验证通过一定要把data，即moblie return回去，因为数据要保存到db中
         return mobile
+
+
+class UserSerializer(serializers.ModelSerializer):
+    # 1.验证验证码是否合法
+    code = serializers.CharField(required=True, max_length=6, min_length=6)
+
+    def validate_code(self, code):
+        # 2.检查验证码是否存在，且按add_time倒序排．只验证最新的一条
+        verify_codes = VerifyCode.objects.filter(mobile=self.initial_data['username']).order_by('-add_time')
+
+        if verify_codes:
+            last_code = verify_codes[0]
+            five_minutes_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
+            # 3.检查验证码是否过期
+            if five_minutes_ago > last_code.add_time:
+                raise serializers.ValidationError("验证码过期")
+
+            # 4.检查验证码的值是否正确
+            if last_code.code != code:
+                raise serializers.ValidationError("验证码错误")
+
+                # return code可以return也可以不return，因为code只是用来做验证，不是需要保存到数据库中．
+        else:
+            # 验证码记录不存在
+            raise serializers.ValidationError("验证码错误")
+
+    class Meta:
+        model = User
+        fields = ('username', 'mobile', 'code')

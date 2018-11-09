@@ -13,7 +13,7 @@ class UserProfile(AbstractUser):
     """
     name = models.CharField(max_length=30, null=True, blank=True, verbose_name=u'姓名')
     birthday = models.DateField(null=True, blank=True, verbose_name=u'出生年月')
-    mobile = models.CharField(max_length=11, verbose_name=u'电话')
+    mobile = models.CharField(null=True, blank=True, max_length=11, verbose_name=u'电话')
     email = models.EmailField(null=True, blank=True, verbose_name=u'邮箱s')
     gender = models.CharField(choices=(('male', u'男'), ('female', u'女')), default='female', max_length=6,
                               verbose_name=u'性别')
