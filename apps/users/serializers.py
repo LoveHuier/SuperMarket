@@ -5,6 +5,7 @@ import re
 from datetime import datetime, timedelta
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from rest_framework.validators import UniqueValidator
 
 from SuperMarket.settings import REGEX_MOBILE
 from .models import VerifyCode
@@ -42,9 +43,18 @@ class SmsSerializer(serializers.Serializer):
         return mobile
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserRegSerializer(serializers.ModelSerializer):
     # 1.验证验证码是否合法
-    code = serializers.CharField(required=True, max_length=6, min_length=6)
+    code = serializers.CharField(required=True, max_length=6, min_length=6, error_messages={
+        "blank": "请输入验证码",
+        "required": "请输入验证码",
+        "max_length": "验证码长度出错",
+        "min_length": "验证码长度出错",
+    }, help_text='验证码')
+
+    # 验证username是否存在，是否唯一
+    username = serializers.CharField(required=True, allow_blank=False,
+                                     validators=[UniqueValidator(queryset=User.objects.all(), message="用户已存在")])
 
     def validate_code(self, code):
         # 2.检查验证码是否存在，且按add_time倒序排．只验证最新的一条
@@ -65,6 +75,16 @@ class UserSerializer(serializers.ModelSerializer):
         else:
             # 验证码记录不存在
             raise serializers.ValidationError("验证码错误")
+
+    def validate(self, attrs):
+        """
+        不加字段名的验证器作用于所有字段之上．对验证后的字段进行统一的处理．
+        :param attrs: 每个字段validate之后，总的字段的dict
+        :return:
+        """
+        attrs['mobile'] = attrs['username']
+        del attrs['code']
+        return attrs
 
     class Meta:
         model = User
