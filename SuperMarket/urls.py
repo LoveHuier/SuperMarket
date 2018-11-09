@@ -24,6 +24,7 @@ from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 
 from goods.views import GoodsListView, GoodsListViewSet, CategoryViewSet
+from users.views import SmsCodeViewset
 
 router = DefaultRouter()
 
@@ -31,6 +32,8 @@ router = DefaultRouter()
 router.register('goods', GoodsListViewSet, base_name='goods')
 # 配置category的url
 router.register('categorys', CategoryViewSet, base_name='categorys')
+# 配置获取验证码code的url
+router.register('codes', SmsCodeViewset, base_name='codes')
 
 # goods_list = GoodsListViewSet.as_view({
 #     'get': 'list',

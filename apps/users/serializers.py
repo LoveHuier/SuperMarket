@@ -15,13 +15,6 @@ User = get_user_model()
 class SmsSerializer(serializers.Serializer):
     mobile = serializers.CharField(max_length=11)
 
-    def validate_empty_values(self, data):
-        """
-
-        :param data:
-        :return:
-        """
-
     def validate_mobile(self, mobile):
         """
         实际上是def validate_empty_values(self, data)，
@@ -36,7 +29,7 @@ class SmsSerializer(serializers.Serializer):
             raise serializers.ValidationError("手机号码非法")
 
         # 手机是否注册
-        if User.object.filter(mobile=mobile).count():
+        if User.objects.filter(mobile=mobile).count():
             raise serializers.ValidationError("用户已经存在")
 
         # 验证码发送频率
