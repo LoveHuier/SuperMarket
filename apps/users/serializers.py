@@ -84,7 +84,7 @@ class UserRegSerializer(serializers.ModelSerializer):
         :param attrs: 每个字段validate之后，总的字段的dict
         :return:
         """
-        attrs['mobile'] = attrs['username']
+        # attrs['mobile'] = attrs['username']
         del attrs['code']
         return attrs
 
