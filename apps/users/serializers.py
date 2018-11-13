@@ -45,21 +45,23 @@ class SmsSerializer(serializers.Serializer):
 
 class UserRegSerializer(serializers.ModelSerializer):
     # 1.验证验证码是否合法
-    code = serializers.CharField(required=True, max_length=6, min_length=6, error_messages={
+    code = serializers.CharField(required=True, write_only=True, max_length=6, min_length=6, error_messages={
         "blank": "请输入验证码",
         "required": "请输入验证码",
         "max_length": "验证码长度出错",
         "min_length": "验证码长度出错",
-    }, help_text='验证码')
+    }, label='验证码', help_text='验证码')
 
     # 验证username是否存在，是否唯一
-    username = serializers.CharField(required=True, allow_blank=False,
+    username = serializers.CharField(required=True, allow_blank=False, label='用户名',
                                      validators=[UniqueValidator(queryset=User.objects.all(), message="用户已存在")])
+    password = serializers.CharField(required=True, style={
+        "input_type": "password"
+    }, label='密码', write_only=True)
 
     def validate_code(self, code):
         # 2.检查验证码是否存在，且按add_time倒序排．只验证最新的一条
-        verify_codes = VerifyCode.objects.filter(mobile=self.initial_data['username']).order_by('-add_time')
-
+        verify_codes = VerifyCode.objects.filter(mobile=self.initial_data['mobile']).order_by('-add_time')
         if verify_codes:
             last_code = verify_codes[0]
             five_minutes_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
@@ -88,4 +90,4 @@ class UserRegSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'mobile', 'code')
+        fields = ('username', 'mobile', 'code', "password")
