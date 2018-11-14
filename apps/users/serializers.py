@@ -61,7 +61,8 @@ class UserRegSerializer(serializers.ModelSerializer):
 
     def validate_code(self, code):
         # 2.检查验证码是否存在，且按add_time倒序排．只验证最新的一条
-        verify_codes = VerifyCode.objects.filter(mobile=self.initial_data['mobile']).order_by('-add_time')
+        da = self.initial_data
+        verify_codes = VerifyCode.objects.filter(mobile=self.initial_data['username']).order_by('-add_time')
         if verify_codes:
             last_code = verify_codes[0]
             five_minutes_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)

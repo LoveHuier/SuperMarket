@@ -8,6 +8,7 @@ from SuperMarket.settings import APIKEY
 from rest_framework.response import Response
 from rest_framework import status
 from random import choice
+from rest_framework_jwt.utils import jwt_encode_handler, jwt_payload_handler
 
 from .serializers import SmsSerializer, UserRegSerializer
 from utils.yunpian import YunPian
@@ -97,6 +98,19 @@ class UserViewset(CreateModelMixin, viewsets.GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        self.perform_create(serializer)
+        # 生成token
+        user = self.perform_create(serializer)
+        payload = jwt_payload_handler(user)
+        token = jwt_encode_handler(payload)
+
+        # 存于serializer.data中
+        re_dict = serializer.data
+        re_dict['token'] = token
+        # 像添加name一样，后期添加任何数据都可以，这样就可以将数据定制化
+        re_dict['name'] = user.name if user.name else user.username
+
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        return serializer.save()
