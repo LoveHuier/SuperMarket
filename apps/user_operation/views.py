@@ -11,7 +11,8 @@ from utils.permissions import IsOwnerOrReadOnly
 
 # Create your views here.
 
-class UserFavViewset(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class UserFavViewset(mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
+                     mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     用户收藏
     """
@@ -20,6 +21,7 @@ class UserFavViewset(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.L
     # 若未登录，用jwt方式登录
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     serializer_class = UserFavSerializer
+    lookup_field = "goods_id"
 
     # 重写get_queryset方法，获取当前user的userfavs，这样就只列出当前user的userfavs
     def get_queryset(self):
