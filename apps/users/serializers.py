@@ -54,10 +54,11 @@ class UserRegSerializer(serializers.ModelSerializer):
 
     # 验证username是否存在，是否唯一
     username = serializers.CharField(required=True, allow_blank=False, label='用户名',
-                                     validators=[UniqueValidator(queryset=User.objects.all(), message="用户已存在")])
+                                     validators=[UniqueValidator(queryset=User.objects.all(), message="用户已存在")],
+                                     help_text='用户名')
     password = serializers.CharField(required=True, style={
         "input_type": "password"
-    }, label='密码', write_only=True)
+    }, label='密码', write_only=True, help_text='密码')
 
     def validate_code(self, code):
         # 2.检查验证码是否存在，且按add_time倒序排．只验证最新的一条
