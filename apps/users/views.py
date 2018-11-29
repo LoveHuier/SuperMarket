@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
 from SuperMarket.settings import APIKEY
@@ -90,7 +90,7 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
             }, status=status.HTTP_201_CREATED)
 
 
-class UserViewset(CreateModelMixin, RetrieveModelMixin, viewsets.GenericViewSet):
+class UserViewset(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, viewsets.GenericViewSet):
     """
     post:
         注册用户
