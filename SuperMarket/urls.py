@@ -25,7 +25,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 from goods.views import GoodsListView, GoodsListViewSet, CategoryViewSet
 from users.views import SmsCodeViewset, UserViewset
-from user_operation.views import UserFavViewset
+from user_operation.views import UserFavViewset, LeavingMessageViewset
 
 router = DefaultRouter()
 
@@ -39,6 +39,8 @@ router.register('codes', SmsCodeViewset, base_name='codes')
 router.register('users', UserViewset, base_name='users')
 # 配置用户收藏的url
 router.register('userfavs', UserFavViewset, base_name='userfavs')
+# 用户留言的url
+router.register('messages', LeavingMessageViewset, base_name='messages')
 
 # goods_list = GoodsListViewSet.as_view({
 #     'get': 'list',
