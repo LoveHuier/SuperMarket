@@ -42,8 +42,10 @@ class OrderInfo(models.Model):
     )
 
     user = models.ForeignKey(User, verbose_name="用户", on_delete=models.CASCADE)
+    # 订单号唯一，由后台生成
     order_sn = models.CharField(max_length=30, null=True, blank=True, unique=True, verbose_name="订单号")
     trade_no = models.CharField(max_length=100, unique=True, null=True, blank=True, verbose_name=u"交易号")
+    # 以防用户支付到一半不支付了
     pay_status = models.CharField(choices=ORDER_STATUS, default="paying", max_length=30, verbose_name="订单状态")
     post_script = models.CharField(max_length=200, verbose_name="订单留言")
     order_mount = models.FloatField(default=0.0, verbose_name="订单金额")
