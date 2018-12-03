@@ -31,3 +31,10 @@ class ShoppingCartSerializer(serializers.Serializer):
             # 因为结果要做反序列化交给前端的
             existed = ShoppingCart.objects.create(**validated_data)
         return existed
+
+    def update(self, instance, validated_data):
+        # 修改商品数量
+        instance.nums = validated_data['nums']
+        instance.save()
+
+        return instance
