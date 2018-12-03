@@ -5,7 +5,7 @@ from rest_framework.authentication import SessionAuthentication
 
 from utils.permissions import IsOwnerOrReadOnly
 from .models import ShoppingCart
-from .serializers import ShoppingCartSerializer
+from .serializers import ShoppingCartSerializer, ShopCartDetailSerializer
 
 
 # Create your views here.
@@ -14,6 +14,8 @@ from .serializers import ShoppingCartSerializer
 class ShoppingCartViewset(viewsets.ModelViewSet):
     """
     购物车功能开发
+    create:
+        添加商品到购物车
     list:
         获取购物车详情
     create:
@@ -31,3 +33,9 @@ class ShoppingCartViewset(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return ShoppingCart.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ShopCartDetailSerializer
+        else:
+            return ShoppingCartSerializer

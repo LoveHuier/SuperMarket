@@ -6,6 +6,20 @@ from .models import ShoppingCart
 from goods.models import Goods
 
 
+class GoodsInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Goods
+        fields = ("id", "name", "shop_price", "goods_front_image")
+
+
+class ShopCartDetailSerializer(serializers.ModelSerializer):
+    goods = GoodsInfoSerializer(many=False)
+
+    class Meta:
+        model = ShoppingCart
+        fields = ("id", "goods", "nums")
+
+
 class ShoppingCartSerializer(serializers.Serializer):
     user = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
