@@ -29,7 +29,7 @@ SECRET_KEY = '@depir#f(sx_5$z_dwsoprw%vgf6j$$2$(6yvi=w!79ys9$8dn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 AUTH_USER_MODEL = 'users.UserProfile'
 
@@ -101,7 +101,7 @@ DATABASES = {
         'NAME': 'supermarket',
         'USER': 'root',
         'PASSWORD': 'ts123456',
-        'HOST': '127.0.0.1',
+        'HOST': '112.74.176.52',
         'OPTIONS': {'init_command': 'SET storage_engine=INNODB;'},
     }
 }
@@ -159,7 +159,7 @@ REST_FRAMEWORK = {
 import datetime
 
 JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
 
