@@ -26,7 +26,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 from goods.views import GoodsListView, GoodsListViewSet, CategoryViewSet
 from users.views import SmsCodeViewset, UserViewset
 from user_operation.views import UserFavViewset, LeavingMessageViewset, AddressViewset
-from trade.views import ShoppingCartViewset, OrderViewset
+from trade.views import ShoppingCartViewset, OrderViewset, AlipayView
 
 router = DefaultRouter()
 
@@ -72,6 +72,8 @@ urlpatterns = [
 
     # 登录接口
     path('login/', obtain_jwt_token),
+    # 支付宝支付相关接口
+    path('alipay/return/', AlipayView.as_view(), name='alipay')
 ]
 # 配置上传文件的访问显示
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

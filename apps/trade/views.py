@@ -83,3 +83,41 @@ class OrderViewset(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Retrie
             shop_cart.delete()
 
         return order
+
+
+from rest_framework.views import APIView
+from utils.alipay import AliPay
+from SuperMarket.settings import alipay_public_key_path, app_private_key_path
+
+
+class AlipayView(APIView):
+    def get(self, request):
+        """
+        处理支付宝的return_url返回
+        :param request:
+        :return:
+        """
+
+    def post(self, request):
+        """
+        处理支付宝的notify_url返回
+        :param request:
+        :return:
+        """
+        processed_dict = {}
+        for k, v in request.POST.items():
+            processed_dict[k] = v
+        sign = processed_dict.pop('sign', None)
+
+        alipay = AliPay(
+            appid="2016092300577912",  # appid一定要改
+            app_notify_url="http://112.74.176.52:8000/alipay/return/",
+            app_private_key_path=app_private_key_path,
+            alipay_public_key_path=alipay_public_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+            debug=True,  # 默认False,是否是debug模式
+            return_url="http://112.74.176.52:8000/alipay/return/"  # 支付完成后要跳转到的目标url
+        )
+
+        verify_re = alipay.verify(processed_dict, sign)
+        print(verify_re)
+
