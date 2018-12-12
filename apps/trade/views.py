@@ -3,6 +3,7 @@ from rest_framework import permissions
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.authentication import SessionAuthentication
 from rest_framework import mixins
+from datetime import datetime
 
 from utils.permissions import IsOwnerOrReadOnly
 from .models import ShoppingCart, OrderInfo, OrderGoods
@@ -88,6 +89,7 @@ class OrderViewset(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Retrie
 from rest_framework.views import APIView
 from utils.alipay import AliPay
 from SuperMarket.settings import alipay_public_key_path, app_private_key_path
+from rest_framework.response import Response
 
 
 class AlipayView(APIView):
@@ -97,6 +99,35 @@ class AlipayView(APIView):
         :param request:
         :return:
         """
+        processed_dict = {}
+        for k, v in request.GET.items():
+            processed_dict[k] = v
+        sign = processed_dict.pop('sign', None)
+
+        alipay = AliPay(
+            appid="2016092300577912",  # appid一定要改
+            app_notify_url="http://112.74.176.52:8000/alipay/return/",
+            app_private_key_path=app_private_key_path,
+            alipay_public_key_path=alipay_public_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+            debug=True,  # 默认False,是否是debug模式
+            return_url="http://112.74.176.52:8000/alipay/return/"  # 支付完成后要跳转到的目标url
+        )
+
+        verify_re = alipay.verify(processed_dict, sign)
+        if verify_re:
+            order_sn = processed_dict.get("out_trade_no", None)
+            trade_no = processed_dict.get("trade_no", None)
+            trade_status = processed_dict.get("trade_status", None)
+
+            # 修改订单状态
+            existed_orders = OrderInfo.objects.filter(order_sn=order_sn)
+            for existed_order in existed_orders:
+                existed_order.trade_no = trade_no
+                existed_order.pay_status = trade_status
+                existed_order.pay_time = datetime.now()
+                existed_order.save()
+
+            return Response("success")
 
     def post(self, request):
         """
@@ -118,6 +149,19 @@ class AlipayView(APIView):
             return_url="http://112.74.176.52:8000/alipay/return/"  # 支付完成后要跳转到的目标url
         )
 
+        # 验证数据是否有效
         verify_re = alipay.verify(processed_dict, sign)
-        print(verify_re)
+        if verify_re:
+            order_sn = processed_dict.get("out_trade_no", None)
+            trade_no = processed_dict.get("trade_no", None)
+            trade_status = processed_dict.get("trade_status", None)
 
+            # 查询数据库中存在的订单
+            existed_orders = OrderInfo.objects.filter(order_sn=order_sn)
+            for existed_order in existed_orders:
+                existed_order.trade_no = trade_no
+                existed_order.pay_status = trade_status
+                existed_order.pay_time = datetime.now()
+                existed_order.save()
+            # 将success返回给支付宝，支付宝就不会一直不停的继续发消息了。
+            return Response("success")
