@@ -77,7 +77,7 @@ ROOT_URLCONF = 'SuperMarket.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -101,7 +101,8 @@ DATABASES = {
         'NAME': 'supermarket',
         'USER': 'root',
         'PASSWORD': 'ts123456',
-        'HOST': '112.74.176.52',
+        # 'HOST': '112.74.176.52',
+        'HOST': '127.0.0.1',
         'OPTIONS': {'init_command': 'SET storage_engine=INNODB;'},
     }
 }

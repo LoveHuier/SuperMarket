@@ -128,6 +128,7 @@ class AlipayView(APIView):
             #     existed_order.pay_time = datetime.now()
             #     existed_order.save()
 
+            # 重定向到订单列表页
             response = redirect('/index/#/app/home/member/order')
             # response.set_cookie('nextPath', value='pay', max_age=2)
             return response

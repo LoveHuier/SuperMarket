@@ -1,4 +1,4 @@
-from goods.serializers import GoodsSerializer, CategorySerializer
+from goods.serializers import GoodsSerializer, CategorySerializer, BannerSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import mixins
@@ -9,7 +9,7 @@ from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Goods, GoodsCategory
+from .models import Goods, GoodsCategory, Banner
 from .filters import GoodsFilter
 
 
@@ -67,3 +67,11 @@ class GoodsListView(generics.ListAPIView):
     #     goods_serializer = GoodsSerializer(goods, many=True)
     #
     #     return Response(goods_serializer.data)
+
+
+class BannerViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    获取轮播图
+    """
+    serializer_class = BannerSerializer
+    queryset = Banner.objects.all().order_by('index')
