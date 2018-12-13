@@ -22,6 +22,7 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
+from django.views.generic import TemplateView
 
 from goods.views import GoodsListView, GoodsListViewSet, CategoryViewSet
 from users.views import SmsCodeViewset, UserViewset
@@ -73,7 +74,9 @@ urlpatterns = [
     # 登录接口
     path('login/', obtain_jwt_token),
     # 支付宝支付相关接口
-    path('alipay/return/', AlipayView.as_view(), name='alipay')
+    path('alipay/return/', AlipayView.as_view(), name='alipay'),
+    # index页面
+    path('index/', TemplateView.as_view(template_name='index.html'), name='index')
 ]
 # 配置上传文件的访问显示
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

@@ -4,6 +4,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.authentication import SessionAuthentication
 from rest_framework import mixins
 from datetime import datetime
+from django.shortcuts import redirect
 
 from utils.permissions import IsOwnerOrReadOnly
 from .models import ShoppingCart, OrderInfo, OrderGoods
@@ -115,19 +116,24 @@ class AlipayView(APIView):
 
         verify_re = alipay.verify(processed_dict, sign)
         if verify_re:
-            order_sn = processed_dict.get("out_trade_no", None)
-            trade_no = processed_dict.get("trade_no", None)
-            trade_status = processed_dict.get("trade_status", None)
+            # order_sn = processed_dict.get("out_trade_no", None)
+            # trade_no = processed_dict.get("trade_no", None)
+            # trade_status = processed_dict.get("trade_status", None)
+            #
+            # # 修改订单状态
+            # existed_orders = OrderInfo.objects.filter(order_sn=order_sn)
+            # for existed_order in existed_orders:
+            #     existed_order.trade_no = trade_no
+            #     existed_order.pay_status = trade_status
+            #     existed_order.pay_time = datetime.now()
+            #     existed_order.save()
 
-            # 修改订单状态
-            existed_orders = OrderInfo.objects.filter(order_sn=order_sn)
-            for existed_order in existed_orders:
-                existed_order.trade_no = trade_no
-                existed_order.pay_status = trade_status
-                existed_order.pay_time = datetime.now()
-                existed_order.save()
-
-            return Response("success")
+            response = redirect('/index/#/app/home/member/order')
+            # response.set_cookie('nextPath', value='pay', max_age=2)
+            return response
+        else:
+            response = redirect("index")
+            return response
 
     def post(self, request):
         """
