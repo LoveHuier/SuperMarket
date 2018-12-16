@@ -84,13 +84,15 @@ class IndexCategorySerializer(serializers.ModelSerializer):
         if ad_goods:
             goods_ins = ad_goods[0].goods
             # 若serialzier中传递进去的是一个queryset,则many为True；否则为false
-            goods_seralizer = AdGoodsSerializer(goods_ins, many=False)
+            goods_seralizer = AdGoodsSerializer(goods_ins, many=False,
+                                                context={'request': self.context['request']})
         return goods_seralizer.data
 
     def get_goods(self, obj):
         all_goods = Goods.objects.filter(Q(category_id=obj.id) | Q(category__parent_category_id=obj.id) | Q(
             category__parent_category__parent_category_id=obj.id))
-        goods_serializer = GoodsSerializer(all_goods, many=True)
+        goods_serializer = GoodsSerializer(all_goods, many=True,
+                                           context={'request': self.context['request']})
         return goods_serializer.data
 
     class Meta:
