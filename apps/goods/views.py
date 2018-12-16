@@ -40,6 +40,14 @@ class GoodsListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewset
     search_fields = ('name', 'goods_brief', 'goods_desc')
     ordering_fields = ('shop_price', 'sold_num')
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # 修改点击数
+        instance.click_num += 1
+        instance.save()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
 
 class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
