@@ -1,7 +1,7 @@
 # _*_coding: utf-8_*_
 
 import xadmin
-from .models import Goods, GoodsCategory, GoodsImage, GoodsCategoryBrand, Banner
+from .models import Goods, GoodsCategory, GoodsImage, GoodsCategoryBrand, Banner, IndexAd
 
 
 class GoodsAdmin(object):
@@ -32,6 +32,7 @@ class GoodsBrandAdmin(object):
     list_display = ["category", "image", "name", "desc"]
 
     def get_context(self):
+        # 重写get_context方法
         context = super(GoodsBrandAdmin, self).get_context()
         if 'form' in context:
             context['form'].fields['category'].queryset = GoodsCategory.objects.filter(category_type=1)
@@ -54,3 +55,5 @@ xadmin.site.register(Goods, GoodsAdmin)
 xadmin.site.register(GoodsCategory, GoodsCategoryAdmin)
 xadmin.site.register(Banner, BannerGoodsAdmin)
 xadmin.site.register(GoodsCategoryBrand, GoodsBrandAdmin)
+
+xadmin.site.register(IndexAd, IndexAdAdmin)
