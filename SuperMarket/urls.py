@@ -24,7 +24,7 @@ from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 from django.views.generic import TemplateView
 
-from goods.views import GoodsListView, GoodsListViewSet, CategoryViewSet, BannerViewset
+from goods.views import GoodsListView, GoodsListViewSet, CategoryViewSet, BannerViewset, IndexCategoryViewset
 from users.views import SmsCodeViewset, UserViewset
 from user_operation.views import UserFavViewset, LeavingMessageViewset, AddressViewset
 from trade.views import ShoppingCartViewset, OrderViewset, AlipayView
@@ -51,6 +51,8 @@ router.register('shopcarts', ShoppingCartViewset, base_name='shopcarts')
 router.register('orders', OrderViewset, base_name="orders")
 # 轮播图的url
 router.register('banners', BannerViewset, base_name="banners")
+# 首页商品系列数据url
+router.register('indexgoods', IndexCategoryViewset, base_name="indexgoods")
 
 # goods_list = GoodsListViewSet.as_view({
 #     'get': 'list',

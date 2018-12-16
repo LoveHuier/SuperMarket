@@ -11,6 +11,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Goods, GoodsCategory, Banner
 from .filters import GoodsFilter
+from .serializers import IndexCategorySerializer
 
 
 # Create your views here.
@@ -75,3 +76,12 @@ class BannerViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     serializer_class = BannerSerializer
     queryset = Banner.objects.all().order_by('index')
+
+
+class IndexCategoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    首页商品分类数据
+    """
+    # 导航有多少tab，就选择多少数据
+    queryset = GoodsCategory.objects.filter(is_tab=True)
+    serializer_class = IndexCategorySerializer
