@@ -8,6 +8,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
 from .models import Goods, GoodsCategory, Banner
 from .filters import GoodsFilter
@@ -27,7 +28,7 @@ class GoodsPagination(PageNumberPagination):
     page_query_param = "page"
 
 
-class GoodsListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class GoodsListViewSet(CacheResponseMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     商品列表页，分页，搜索，过滤，排序
     """
