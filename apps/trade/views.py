@@ -34,6 +34,34 @@ class ShoppingCartViewset(viewsets.ModelViewSet):
     serializer_class = ShoppingCartSerializer
     lookup_field = "goods_id"
 
+    def perform_create(self, serializer):
+        # 创建购物车时，修改库存量
+        shop_cart = serializer.save()
+        goods = shop_cart.goods
+        goods.goods_num -= shop_cart.nums
+        goods.save()
+
+    def perform_destroy(self, instance):
+        # 删除购物车时，修改库存量，一定要在删除之前进行操作
+        goods = instance.goods
+        goods.goods_num += instance.nums
+        goods.save()
+        instance.delete()
+
+    def perform_update(self, serializer):
+        # 获取当前购物车记录
+        existed_record = ShoppingCart.objects.get(serializer.instance.id)
+        # 获取购物车中商品的库存量
+        existed_nums = existed_record.goods.goods_num
+
+        # 返回修改后的购物车记录
+        save_record = serializer.save()
+        goods = save_record.goods
+
+        nums = save_record.nums - existed_nums
+        goods.goods_num -= nums
+        goods.save()
+
     def get_queryset(self):
         return ShoppingCart.objects.filter(user=self.request.user)
 
