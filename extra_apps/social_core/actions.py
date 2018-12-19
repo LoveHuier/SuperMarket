@@ -1,7 +1,7 @@
 from six.moves.urllib_parse import quote
 
 from .utils import sanitize_redirect, user_is_authenticated, \
-                   user_is_active, partial_pipeline_data, setting_url
+    user_is_active, partial_pipeline_data, setting_url
 
 
 def do_auth(backend, redirect_name='next'):
@@ -97,7 +97,14 @@ def do_complete(backend, login, user=None, redirect_name='next',
                         [backend.strategy.request_host()]
         url = sanitize_redirect(allowed_hosts, url) or \
               backend.setting('LOGIN_REDIRECT_URL')
-    return backend.strategy.redirect(url)
+    from rest_framework_jwt.utils import jwt_encode_handler, jwt_payload_handler
+    # 修改源码适配drf
+    response = backend.strategy.redirect(url)
+    payload = jwt_payload_handler(user)
+    token = jwt_encode_handler(payload)
+    response.set_cookie('name', user.name if user.name else user.username, max_age=24 * 3600)
+    response.set_cookie("token", token, max_age=24 * 3600)
+    return response
 
 
 def do_disconnect(backend, user, association_id=None, redirect_name='next',
@@ -125,7 +132,7 @@ def do_disconnect(backend, user, association_id=None, redirect_name='next',
             allowed_hosts = backend.setting('ALLOWED_REDIRECT_HOSTS', []) + \
                             [backend.strategy.request_host()]
             url = sanitize_redirect(allowed_hosts, url) or \
-                backend.setting('DISCONNECT_REDIRECT_URL') or \
-                backend.setting('LOGIN_REDIRECT_URL')
+                  backend.setting('DISCONNECT_REDIRECT_URL') or \
+                  backend.setting('LOGIN_REDIRECT_URL')
         response = backend.strategy.redirect(url)
     return response
