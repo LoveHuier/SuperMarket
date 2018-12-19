@@ -36,6 +36,10 @@ AUTH_USER_MODEL = 'users.UserProfile'
 # 自定义验证类
 AUTHENTICATION_BACKENDS = (
     'users.views.CustomBackend',
+    'social_core.backends.weibo.WeiboOAuth2',
+    'social_core.backends.qq.QQOAuth2',
+    'social_core.backends.weixin.WeixinOAuth2',
+    "django.contrib.auth.backends.ModelBackend",
 )
 
 # Application definition
@@ -59,6 +63,7 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'rest_framework.authtoken',
+    "social_django",
 ]
 
 MIDDLEWARE = [
@@ -85,6 +90,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -205,3 +212,16 @@ CACHES = {
         }
     }
 }
+
+# 配置应用的key与secret
+SOCIAL_AUTH_WEIBO_KEY = '548743674'
+SOCIAL_AUTH_WEIBO_SECRET = '67ecdc8739355c4b144499725675f016'
+
+SOCIAL_AUTH_QQ_KEY = 'foobar'
+SOCIAL_AUTH_QQ_SECRET = 'bazqux'
+
+SOCIAL_AUTH_WEIXIN_KEY = 'foobar'
+SOCIAL_AUTH_WEIXIN_SECRET = 'bazqux'
+
+# 用户第三方登录成功后重定向，跳转到的url
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/login/'

@@ -80,7 +80,9 @@ urlpatterns = [
     # 支付宝支付相关接口
     path('alipay/return/', AlipayView.as_view(), name='alipay'),
     # index页面
-    path('index/', TemplateView.as_view(template_name='index.html'), name='index')
+    path('index/', TemplateView.as_view(template_name='index.html'), name='index'),
+    # 第三方登录url
+    path('', include('social_django.urls', namespace='social'))
 ]
 # 配置上传文件的访问显示
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
