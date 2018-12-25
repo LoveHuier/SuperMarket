@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework.authtoken',
     "social_django",
+    "raven.contrib.django.raven_compat",
 ]
 
 MIDDLEWARE = [
@@ -225,3 +226,7 @@ SOCIAL_AUTH_WEIXIN_SECRET = 'bazqux'
 
 # 用户第三方登录成功后重定向，跳转到的url
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/index/'
+
+RAVEN_CONFIG = {
+    'dsn': 'http://73531a04ebc4423ebb4b927e1cf479b5:0b52d4e5f75d45e48cec2cacd43ef10d@112.74.176.52:9000/5',
+}
